@@ -28,7 +28,7 @@ jobs:
     steps:
       - checkout
       - discord/status:
-            success_message: '2022@denny.me hey zan! ${CIRLCECI_JOB}'
+            success_message: '2021@denny.me hey zan! ${CIRLCECI_JOB}'
             success_only: true
   build-and-test:
       parameters:
