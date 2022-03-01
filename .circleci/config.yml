@@ -8,6 +8,12 @@ orbs:
   heroku: circleci/heroku@1.2.6
   discord: antonioned/discord@0.1.0
 
+
+parameters:
+  scheduled:
+    type: boolean
+    default: false
+
 jobs:
   say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -104,6 +110,8 @@ jobs:
           process-types: web
 workflows:
   say-hello-workflow:
+    when:
+      not: << pipeline.parameters.scheduled >>
     jobs:
       - build-and-test:
           matrix:
@@ -117,7 +125,19 @@ workflows:
           filters:
             branches:
               only: main
+      - hold-for-approval:
+          type: approval
+          requires: 
+            - build-docker
       - deploy-to-heroku:
           requires:
             - build-docker
             - hold-for-approval
+  nightly_build:
+    when: << pipeline.parameters.scheduled >>
+    jobs:
+      - build-and-test:
+          matrix:
+            parameters:
+              node_version: ["16.14.0", "14.19.0", "17.6.0" ]
+      - dependency-vulnerability-scan
