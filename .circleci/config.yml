@@ -120,3 +120,4 @@ workflows:
       - deploy-to-heroku:
           requires:
             - build-docker
+            - hold-for-approval
