@@ -9,6 +9,6 @@ workflows:
     jobs:
       - path-filtering/filter:
           base-revision: main
-          config-path: ./circleci/continue_config.yml
+          config-path: .circleci/continue_config.yml
           mapping: |
             scripts/.*  skip-run  true
