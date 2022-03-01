@@ -3,6 +3,7 @@
 version: 2.1
 orbs:
   snyk: snyk/snyk@1.1.2
+  docker: circleci/docker@2.0.2
 
 
 jobs:
@@ -53,10 +54,27 @@ jobs:
       - node/install-packages
       - snyk/scan:
           fail-on-issues: true
+  build-docker:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - docker/check
+      - docker/build:
+          image: $DOCKER_LOGIN/${CIRCLE_PROJECT_REPONAME}-1-March-22
+          tag: 0.1.<< pipeline.number >>
+      - docker/push:
+          image: $DOCKER_LOGIN/${CIRCLE_PROJECT_REPONAME}-1-March-22
+          tag: 0.1.<< pipeline.number >>
 
 workflows:
   say-hello-workflow:
     jobs:
       - dependency-vulnerability-scan
       - build-and-test
+      - build-docker
+          requires:
+                - build-and-test
+                - dependency-vulnerability-scan
       
