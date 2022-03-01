@@ -21,8 +21,12 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
   build-and-test:
+      parameters:
+        node_version:
+          type: string
+          default: 16.14.0
       docker:
-        - image: cimg/node:16.14.0
+        - image: cimg/node:<< parameters.node_version >>
       steps:
         - checkout
         - restore_cache:
@@ -85,7 +89,10 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - build-and-test
+      - build-and-test:
+          matrix:
+            parameters:
+              node_version: ["16.14.0", "14.19.0", "17.6.0" ]
       - dependency-vulnerability-scan
       - build-docker:
           requires:
