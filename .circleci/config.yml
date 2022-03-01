@@ -6,6 +6,7 @@ orbs:
   node: circleci/node@5.0.0
   docker: circleci/docker@2.0.2
   heroku: circleci/heroku@1.2.6
+  discord: antonioned/discord@0.1.0
 
 jobs:
   say-hello:
@@ -63,6 +64,9 @@ jobs:
             path: test-results
         - store_artifacts:
             path: test-results
+        # - discord/status:
+        #     success_message: 'test'
+        #     success_only: true  
   dependency-vulnerability-scan:
     docker:
       - image: cimg/node:16.14.0
@@ -79,10 +83,10 @@ jobs:
       - setup_remote_docker
       - docker/check
       - docker/build:
-          image: $DOCKER_LOGIN/${CIRCLE_PROJECT_REPONAME}-1-March-22
+          image: $DOCKER_LOGIN/${CIRCLE_PROJECT_REPONAME}-1-march-22
           tag: 0.1.<< pipeline.number >>
       - docker/push:
-          image: $DOCKER_LOGIN/${CIRCLE_PROJECT_REPONAME}-1-March-22
+          image: $DOCKER_LOGIN/${CIRCLE_PROJECT_REPONAME}-1-march-22
           tag: 0.1.<< pipeline.number >>
   deploy-to-heroku:
     docker: 
@@ -110,6 +114,9 @@ workflows:
           requires:
             - build-and-test
             - dependency-vulnerability-scan
+          filters:
+            branches:
+              only: main
       - deploy-to-heroku:
           requires:
             - build-docker
