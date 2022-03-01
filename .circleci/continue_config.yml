@@ -114,8 +114,9 @@ jobs:
 workflows:
   say-hello-workflow:
     when:
-      not: << pipeline.parameters.skip-run >>
-      not: << pipeline.parameters.scheduled >>
+      and: 
+        - not: << pipeline.parameters.skip-run >>
+        - not: << pipeline.parameters.scheduled >>
     jobs:
       - build-and-test:
           matrix:
