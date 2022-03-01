@@ -1,7 +1,8 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-
+orbs:
+  snyk: snyk/snyk@1.1.2
 
 
 jobs:
@@ -44,9 +45,18 @@ jobs:
             path: test-results
         - store_artifacts:
             path: test-results
-
+  dependency-vulnerability-scan:
+    docker:
+      - image: cimg/node:16.14.0
+    steps:
+      - checkout
+      - node/install-packages
+      - snyk/scan:
+          fail-on-issues: true
 
 workflows:
   say-hello-workflow:
     jobs:
+      - dependency-vulnerability-scan
       - build-and-test
+      
