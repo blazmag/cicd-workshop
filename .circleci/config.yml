@@ -26,8 +26,19 @@ jobs:
             name: Install deps
             command: npm install
         - run:
-            name: Run tests
-            command: npm run test-ci
+          name: Run tests
+          command: npm run test-ci
+        - run:
+            name: Copy tests results for storing
+            command: |
+              cp test-results.xml test-results/
+            when: always
+        - store_test_results:
+            path: test-results
+        - store_artifacts:
+            path: test-results
+
+
 workflows:
   say-hello-workflow:
     jobs:
