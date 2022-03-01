@@ -68,7 +68,20 @@ jobs:
       - docker/push:
           image: $DOCKER_LOGIN/${CIRCLE_PROJECT_REPONAME}-1-March-22
           tag: 0.1.<< pipeline.number >>
-
+  deploy-to-heroku:
+    docker: 
+      - image: cimg/base:stable
+    steps:
+      - heroku/install
+      - heroku/check-authentication
+      - checkout
+      - setup_remote_docker
+      - heroku/push-docker-image:
+          app-name:  blaz-cicd-workshop 
+          process-types: web
+      - heroku/release-docker-image:
+          app-name:  blaz-cicd-workshop 
+          process-types: web
 workflows:
   say-hello-workflow:
     jobs:
@@ -78,4 +91,6 @@ workflows:
           requires:
             - build-and-test
             - dependency-vulnerability-scan
-      
+      - deploy-to-heroku:
+          requires:
+            - build-docker
