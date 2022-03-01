@@ -3,8 +3,9 @@
 version: 2.1
 orbs:
   snyk: snyk/snyk@1.1.2
+  node: circleci/node@5.0.0
   docker: circleci/docker@2.0.2
-
+  heroku: circleci/heroku@1.2.6
 
 jobs:
   say-hello:
