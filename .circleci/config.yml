@@ -71,10 +71,10 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - dependency-vulnerability-scan
       - build-and-test
-      - build-docker
+      - dependency-vulnerability-scan
+      - build-docker:
           requires:
-                - build-and-test
-                - dependency-vulnerability-scan
+            - build-and-test
+            - dependency-vulnerability-scan
       
